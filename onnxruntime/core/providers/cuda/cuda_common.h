@@ -221,7 +221,7 @@ inline bool CalculateFdmStrides(gsl::span<fast_divmod> p, const std::vector<int6
 
 class CublasMathModeSetter {
  public:
-  CublasMathModeSetter(const cudaDeviceProp& prop,cublasHandle_t handle, cublasMath_t mode) : prop_(prop), handle_(handle) {
+  CublasMathModeSetter(const cudaDeviceProp& prop, cublasHandle_t handle, cublasMath_t mode) : prop_(prop), handle_(handle) {
     cublasGetMathMode(handle, &mode_);
 #if defined(CUDA_VERSION) && CUDA_VERSION < 11000
     if (prop.major >= 7 && mode == CUBLAS_TENSOR_OP_MATH) {

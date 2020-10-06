@@ -90,7 +90,6 @@ class SessionState {
         inter_op_thread_pool_(inter_op_thread_pool),
         data_transfer_mgr_(data_transfer_mgr),
         use_deterministic_compute_(use_deterministic_compute) {
-    SetupAllocators();
   }
 
   ~SessionState() {
@@ -281,8 +280,6 @@ class SessionState {
 
  private:
   ORT_DISALLOW_COPY_ASSIGNMENT_AND_MOVE(SessionState);
-
-  void SetupAllocators();
 
   // Populate OrtValueNameIdxMap and create the graph viewer.
   void CreateGraphInfo();

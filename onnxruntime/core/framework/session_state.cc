@@ -21,25 +21,6 @@ using namespace ::onnxruntime::experimental;
 
 namespace onnxruntime {
 
-void SessionState::SetupAllocators() {
-  for (const auto& provider : execution_providers_) {
-    for (const auto& allocator : provider->GetAllocators()) {
-      const OrtMemoryInfo& memory_info = allocator->Info();
-      if (allocators_.find(memory_info) != allocators_.end()) {
-        // EPs are ordered by priority so ignore the duplicate allocator for this memory location.
-        LOGS(logger_, INFO) << "Allocator already registered for " << allocator->Info()
-                            << ". Ignoring allocator from " << provider->Type();
-      } else {
-        // slightly weird indirection to go back to the provider to get the allocator each time it's needed
-        // in order to support scenarios such as the CUDA EP's per-thread allocator.
-        allocators_[memory_info] = [&provider](int id, OrtMemType mem_type) {
-          return provider->GetAllocator(id, mem_type);
-        };
-      }
-    }
-  }
-}
-
 AllocatorPtr SessionState::GetAllocator(const OrtMemoryInfo& location) const noexcept {
   AllocatorPtr result;
   auto entry = allocators_.find(location);
