@@ -683,7 +683,7 @@ TEST(InferenceSessionTests, CheckRunProfilerStartTime) {
   uint64_t before_start_time = std::chrono::duration_cast<std::chrono::nanoseconds>(
       std::chrono::high_resolution_clock::now().time_since_epoch()).count(); // get current time
   session_object.StartProfiling("onnxruntime_profile_start");
-  uint64_t profiling_start_time = session_object.GetProfiling().GetStartTime();
+  uint64_t profiling_start_time = session_object.GetProfiling().GetStartTimeNs();
   uint64_t after_start_time = std::chrono::duration_cast<std::chrono::nanoseconds>(
       std::chrono::high_resolution_clock::now().time_since_epoch()).count();
 
@@ -1869,7 +1869,8 @@ TEST(InferenceSessionTests, TestLenientShapeInferencing) {
   old_opset.AddInput("data", input_shape, input_data);
   old_opset.AddOutput<int64_t>("output", invalid_output_shape, output_data);
   // TensorRT doesn't handle Unsqueeze
-  old_opset.Run(OpTester::ExpectResult::kExpectSuccess, "", {kTensorrtExecutionProvider});
+  // OpenVINO: Disabled temporarily
+  old_opset.Run(OpTester::ExpectResult::kExpectSuccess, "", {kTensorrtExecutionProvider, kOpenVINOExecutionProvider});
 }
 
 #ifdef USE_CUDA
